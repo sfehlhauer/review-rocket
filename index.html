@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review Rocket — Turn Missed Reviews Into Local Domination</title>
+<style>
+  :root {
+    --navy: #0b1120;
+    --navy-light: #131c31;
+    --accent: #ff5a3c;
+    --accent-light: #ff8a68;
+    --blue: #2f6fed;
+    --text-light: #e8ecf5;
+    --text-muted: #9aa4b8;
+    --white: #ffffff;
+    --card-bg: #101a2e;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+    background: var(--navy);
+    color: var(--text-light);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  a { text-decoration: none; color: inherit; }
+
+  .container {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* NAVBAR */
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(11,17,32,0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    max-width: 1180px;
+    margin: 0 auto;
+  }
+
+  .logo {
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .logo span {
+    background: linear-gradient(135deg, var(--accent), var(--accent-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 32px;
+    font-size: 15px;
+    font-weight: 500;
+  }
+
+  .nav-links a {
+    color: var(--text-muted);
+    transition: color 0.2s ease;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  .nav-cta {
+    background: linear-gradient(135deg, var(--accent), #ff7a52);
+    color: var(--white);
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0 4px 20px rgba(255,90,60,0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+
+  .nav-cta:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 26px rgba(255,90,60,0.5);
+  }
+
+  .mobile-toggle { display: none; }
+
+  /* HERO */
+  .hero {
+    position: relative;
+    padding: 120px 24px 100px;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(255,90,60,0.15), transparent 40%),
+      radial-gradient(circle at 80% 30%, rgba(47,111,237,0.18), transparent 45%),
+      var(--navy);
+    overflow: hidden;
+  }
+
+  .hero-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 60px;
+    align-items: center;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255,90,60,0.12);
+    border: 1px solid rgba(255,90,60,0.35);
+    color: var(--accent-light);
+    font-size: 13px;
+    font-weight: 600;
+    padding: 8px 16px;
+    border-radius: 30px;
+    margin-bottom: 24px;
+    letter-spacing: 0.3px;
+  }
+
+  .hero h1 {
+    font-size: 52px;
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -1px;
+    margin-bottom: 24px;
+  }
+
+  .hero h1 .highlight {
+    background: linear-gradient(135deg, var(--accent), #ffb199);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .hero p.sub {
+    font-size: 19px;
+    color: var(--text-muted);
+    max-width: 540px;
+    margin-bottom: 36px;
+  }
+
+  .hero-ctas {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+
+  .btn-primary {
+    background: linear-gradient(135deg, var(--accent), #ff7a52);
+    color: var(--white);
+    padding: 16px 32px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    box-shadow: 0 8px 30px rgba(255,90,60,0.35);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 36px rgba(255,90,60,0.5);
+  }
+
+  .btn-secondary {
+    border: 1px solid rgba(255,255,255,0.2);
+    color: var(--text-light);
+    padding: 16px 32px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 16px;
+    transition: all 0.2s ease;
+    display: inline-block;
+  }
+
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.4);
+  }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+  }
+
+  .stat-item h3 {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--white);
+  }
+
+  .stat-item p {
+    font-size: 13px;
+    color: var(--text-muted);
+  }
+
+  .hero-visual {
+    position: relative;
+  }
+
+  .score-card {
+    background: linear-gradient(160deg, var(--card-bg), #0c1526);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    position: relative;
+  }
+
+  .score-card h4 {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-bottom: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+  }
+
+  .score-card .big-score {
+    font-size: 56px;
+    font-weight: 800;
+    color: var(--accent-light);
+    margin-bottom: 20px;
+  }
+
+  .score-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+  }
+
+  .score-row:last-child { border-bottom: none; }
+
+  .score-row .stars { color: #ffb84d; letter-spacing: 2px; }
+
+  .up-badge {
+    background: rgba(52,199,89,0.15);
+    color: #34c759;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .floating-tag {
+    position: absolute;
+    top: -18px;
+    right: -18px;
+    background: linear-gradient(135deg, var(--blue), #4b8bff);
+    color: white;
+    padding: 10px 18px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 13px;
+    box-shadow: 0 10px 25px rgba(47,111,237,0.4);
+    transform: rotate(4deg);
+  }
+
+  /* SECTIONS COMMON */
+  section { padding: 100px 24px; }
+
+  .section-head {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 64px;
+  }
+
+  .eyebrow {
+    color: var(--accent);
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .section-head h2 {
+    font-size: 38px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    margin-bottom: 16px;
+    color: var(--white);
+  }
+
+  .section-head p {
+    color: var(--text-muted);
+    font-size: 17px;
+  }
+
+  /* FEATURES */
+  .features {
+    background: var(--navy-light);
+  }
+
+  .feature-grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .feature-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 34px 28px;
+    transition: transform 0.25s ease, border-color 0.25s ease;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-6px);
+    border-color: rgba(255,90,60,0.4);
+  }
+
+  .feature-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 12px;
+    background: linear-gradient(135deg, rgba(255,90,60,0.2), rgba(47,111,237,0.2));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .feature-card h3 {
+    font-size: 19px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    color: var(--white);
+  }
+
+  .feature-card p {
+    color: var(--text-muted);
+    font-size: 15px;
+  }
+
+  /* ABOUT */
+  .about {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 70px;
+    align-items: center;
+  }
+
+  .about-visual {
+    background: linear-gradient(160deg, #101a2e, #0c1526);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 40px;
+  }
+
+  .timeline-item {
+    display: flex;
+    gap: 18px;
+    margin-bottom: 28px;
+  }
+
+  .timeline-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #ff7a52);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 14px;
+    flex-shrink: 0;
+    color: white;
+  }
+
+  .timeline-item h4 {
+    font-size: 16px;
+    margin-bottom: 4px;
+    color: var(--white);
+  }
+
+  .timeline-item p {
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .about-text .eyebrow { margin-bottom: 14px; }
+
+  .about-text h2 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 20px;
+    letter-spacing: -0.5px;
+    color: var(--white);
+  }
+
+  .about-text p {
+    color: var(--text-muted);
+    font-size: 16px;
+    margin-bottom: 18px;
+  }
+
+  .about-list {
+    list-style: none;
+    margin-top: 24px;
+  }
+
+  .about-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 14px;
+    font-size: 15px;
+    color: var(--text-light);
+  }
+
+  .check {
+    color: var(--accent);
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  /* PRICING */
+  .pricing {
+    background: var(--navy-light);
+  }
+
+  .pricing-grid {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+
+  .price-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 40px 32px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition: transform 0.25s ease;
+  }
+
+  .price-card:hover { transform: translateY(-6px); }
+
+  .price-card.featured {
+    border: 2px solid var(--accent);
+    background: linear-gradient(160deg, #1a1a2e, #131c31);
+    box-shadow: 0 20px 50px rgba(255,90,60,0.25);
+  }
+
+  .price-tag {
+    position: absolute;
+    top: -14px;
+    left: 32px;
+    background: var(--accent);
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .price-card h3 {
+    font-size: 20px;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .price-card .price-desc {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 24px;
+  }
+
+  .price-amount {
+    font-size: 40px;
+    font-weight: 800;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .price-amount span {
+    font-size: 15px;
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .price-setup {
+    font-size: 13px;
+    color: var(--accent-light);
+    font-weight: 600;
+    margin-bottom: 26px;
+  }
+
+  .price-features {
+    list-style: none;
+    margin-bottom: 32px;
+    flex-grow: 1;
+  }
+
+  .price-features li {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--text-light);
+    display: flex;
+    gap: 10px;
+  }
+
+  .price-features li:last-child { border-bottom: none; }
+
+  .btn-block {
+    text-align: center;
+    width: 100%;
+  }
+
+  .btn-outline {
+    border: 1px solid rgba(255,255,255,0.25);
+    color: var(--text-light);
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    transition: all 0.2s ease;
+    display: block;
+    text-align: center;
+  }
+
+  .btn-outline:hover {
+    background: rgba(255,255,255,0.08);
+  }
+
+  .btn-fill {
+    background: linear-gradient(135deg, var(--accent), #ff7a52);
+    color: white;
+    padding: 14px;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 15px;
+    display: block;
+    text-align: center;
+    box-shadow: 0 8px 24px rgba(255,90,60,0.35);
+    transition: transform 0.2s ease;
+  }
+
+  .btn-fill:hover { transform: translateY(-2px); }
+
+  .pricing-note {
+    text-align: center;
+    margin-top: 40px;
+    color: var(--text-muted);
+    font-size: 14px;
+  }
+
+  /* CTA / CONTACT */
+  .cta-section {
+    background: linear-gradient(135deg, #1a0f0a, #101a2e 60%);
+    text-align: center;
+    padding: 110px 24px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .cta-section::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,90,60,0.25), transparent 70%);
+    top: -200px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .cta-inner {
+    position: relative;
+    z-index: 2;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .cta-section h2 {
+    font-size: 40px;
+    font-weight: 800;
+    margin-bottom: 18px;
+    letter-spacing: -0.5px;
+  }
+
+  .cta-section p {
+    color: var(--text-muted);
+    font-size: 17px;
+    margin-bottom: 40px;
+  }
+
+  .contact-form {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    padding: 36px;
+    max-width: 520px;
+    margin: 0 auto;
+    text-align: left;
+    box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 14px;
+  }
+
+  .contact-form input, .contact-form textarea {
+    width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 13px 14px;
+    color: var(--white);
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  .contact-form input::placeholder, .contact-form textarea::placeholder {
+    color: var(--text-muted);
+  }
+
+  .contact-form textarea {
+    margin-bottom: 18px;
+    resize: vertical;
+    min-height: 80px;
+  }
+
+  .contact-form button {
+    width: 100%;
+    background: linear-gradient(135deg, var(--accent), #ff7a52);
+    color: white;
+    border: none;
+    padding: 15px;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 15px;
+    cursor: pointer;
+    box-shadow: 0 8px 24px rgba(255,90,60,0.35);
+    transition: transform 0.2s ease;
+  }
+
+  .contact-form button:hover { transform: translateY(-2px); }
+
+  .form-note {
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 14px;
+  }
+
+  /* FOOTER */
+  footer {
+    background: #070c17;
+    padding: 50px 24px 30px;
+    border-top: 1px solid var(--border);
+  }
+
+  .footer-inner {
+    max-width: 1180px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 30px;
+  }
+
+  .footer-brand p {
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-top: 10px;
+    max-width: 280px;
+  }
+
+  .footer-links {
+    display: flex;
+    gap: 60px;
+    flex-wrap: wrap;
+  }
+
+  .footer-col h4 {
+    font-size: 14px;
+    color: var(--white);
+    margin-bottom: 14px;
+  }
+
+  .footer-col a {
+    display: block;
+    color: var(--text-muted);
+    font-size: 14px;
+    margin-bottom: 10px;
+    transition: color 0.2s ease;
+  }
+
+  .footer-col a:hover { color: var(--accent-light); }
+
+  .footer-bottom {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--border);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .about { grid-template-columns: 1fr; }
+    .feature-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero h1 { font-size: 38px; }
+  }
+
+  @media (max-width: 600px) {
+    .feature-grid { grid-template-columns: 1fr; }
+    .form-row { grid-template-columns: 1fr; }
+    .hero-stats { flex-wrap: wrap; gap: 24px; }
+    section { padding: 70px 20px; }
+    .hero { padding: 100px 20px 70px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <div class="logo">🚀 <span>Review Rocket</span></div>
+    <div class="nav-links">
+      <a href="#features">Services</a>
+      <a href="#about">About</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact</a>
+    </div>
+    <a href="#contact" class="nav-cta">Get Started</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <span class="badge">⭐ Trusted by 100+ local businesses</span>
+      <h1>Turn Missed Reviews Into Your <span class="highlight">Unfair Advantage.</span></h1>
+      <p class="sub">Review Rocket installs the systems, monitors every mention, and writes the responses — so your business consistently outranks and outshines every competitor nearby.</p>
+      <div class="hero-ctas">
+        <a href="#contact" class="btn-primary">Claim Your Free Reputation Audit</a>
+        <a href="#pricing" class="btn-secondary">See Pricing</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat-item">
+          <h3>4.9★</h3>
+          <p>Avg. rating after 90 days</p>
+        </div>
+        <div class="stat-item">
+          <h3>3.2x</h3>
+          <p>More reviews collected</p>
+        </div>
+        <div class="stat-item">
+          <h3>24hr</h3>
+          <p>Response turnaround</p>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="score-card">
+        <div class="floating-tag">Weekly Scorecard 📈</div>
+        <h4>Reputation Score</h4>
+        <div class="big-score">94/100</div>
+        <div class="score-row">
+          <span>Google Reviews</span>
+          <span class="stars">★★★★★</span>
+          <span class="up-badge">+18 this week</span>
+        </div>
+        <div class="score-row">
+          <span>Response Rate</span>
+          <span>100%</span>
+          <span class="up-badge">On track</span>
+        </div>
+        <div class="score-row">
+          <span>Avg. Rating</span>
+          <span>4.9</span>
+          <span class="up-badge">+0.3</span>
+        </div>
+        <div class="score-row">
+          <span>Nearby Competitor</span>
+          <span>4.3</span>
+          <span class="up-badge">You're ahead</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features" id="features">
+  <div class="section-head">
+    <span class="eyebrow">What We Do</span>
+    <h2>A Full Reputation Engine, On Autopilot</h2>
+    <p>Every touchpoint your customers have with your reviews — installed, monitored, and optimized for you every single week.</p>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📲</div>
+      <h3>QR & SMS Review Prompts</h3>
+      <p>We install frictionless review touchpoints at checkout, in follow-up texts, and on receipts so happy customers actually leave reviews.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔍</div>
+      <h3>24/7 Review Monitoring</h3>
+      <p>Every new review across Google, Yelp, and Facebook is tracked in real time — nothing slips through the cracks.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">✍️</div>
+      <h3>Personalized Response Drafting</h3>
+      <p>We write thoughtful, on-brand responses to every review — positive or negative — within 24 hours.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>Weekly Reputation Scorecard</h3>
+      <p>A clean, visual report showing your rating trend, volume, and how you stack up against nearby competitors.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🚨</div>
+      <h3>Negative Review Alerts</h3>
+      <p>Instant alerts when a low-star review lands, plus a recommended damage-control response drafted for you.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏢</div>
+      <h3>Multi-Location Support</h3>
+      <p>Manage reputation across every location from one simple dashboard, with per-site scorecards included.</p>
+    </div>
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="about-text">
+    <span class="eyebrow">Why Review Rocket</span>
+    <h2>We Do The Unglamorous Work That Wins New Customers</h2>
+    <p>Most local businesses lose customers before they even walk in the door — because their online reviews look thin, outdated, or inconsistent compared to the business down the street.</p>
+    <p>Review Rocket installs a steady, reliable system that keeps new reviews flowing in, keeps every response professional and on-brand, and gives you a clear weekly view of exactly where you stand.</p>
+    <ul class="about-list">
+      <li><span class="check">✓</span> Built specifically for dentists, med spas, home services, restaurants & auto shops</li>
+      <li><span class="check">✓</span> Fully managed — no software to learn, no dashboards to babysit</li>
+      <li><span class="check">✓</span> Transparent weekly reporting so you always know your ROI</li>
+    </ul>
+  </div>
+  <div class="about-visual">
+    <div class="timeline-item">
+      <div class="timeline-num">1</div>
+      <div>
+        <h4>Install</h4>
+        <p>We set up QR codes, SMS prompts, and review funnels tailored to your business in week one.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num">2</div>
+      <div>
+        <h4>Monitor</h4>
+        <p>Every new review is tracked in real time across all major platforms, 24/7.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num">3</div>
+      <div>
+        <h4>Respond</h4>
+        <p>Personalized, professional responses are drafted and posted within 24 hours.</p>
+      </div>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-num">4</div>
+      <div>
+        <h4>Report</h4>
+        <p>You get a weekly scorecard showing exactly how you're outperforming competitors nearby.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="pricing" id="pricing">
+  <div class="section-head">
+    <span class="eyebrow">Simple, Transparent Pricing</span>
+    <h2>Choose the Plan That Fits Your Growth</h2>
+    <p>One-time setup gets you live in days. Monthly retainer keeps your reputation growing every week after that.</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <h3>Starter</h3>
+      <p class="price-desc">For single-location businesses building momentum</p>
+      <div class="price-amount">$299<span>/mo</span></div>
+      <div class="price-setup">$500 one-time setup</div>
+      <ul class="price-features">
+        <li>✓ QR & SMS review prompts</li>
+        <li>✓ Review monitoring (Google + Yelp)</li>
+        <li>✓ Weekly reputation scorecard</li>
+        <li>✓ Response drafting (up to 20/mo)</li>
+      </ul>
+      <a href="#contact" class="btn-outline">Get Started</a>
+    </div>
+    <div class="price-card featured">
+      <span class="price-tag">MOST POPULAR</span>
+      <h3>Growth</h3>
+      <p class="price-desc">For businesses ready to visibly outrank competitors</p>
+      <div class="price-amount">$549<span>/mo</span></div>
+      <div class="price-setup">$950 one-time setup</div>
+      <ul class="price-features">
+        <li>✓ Everything in Starter</li>
+        <li>✓ Unlimited response drafting</li>
+        <li>✓ Negative review alerts + crisis response</li>
+        <li>✓ Competitor benchmarking dashboard</li>
+        <li>✓ Facebook + industry-specific platforms</li>
+      </ul>
+      <a href="#contact" class="btn-fill">Get Started</a>
+    </div>
+    <div class="price-card">
+      <h3>Multi-Location</h3>
+      <p class="price-desc">For franchises and multi-site operators</p>
+      <div class="price-amount">$799+<span>/mo</span></div>
+      <div class="price-setup">$1,500 one-time setup</div>
+      <ul class="price-features">
+        <li>✓ Everything in Growth</li>
+        <li>✓ Per-location scorecards</li>
+        <li>✓ Centralized multi-site dashboard</li>
+        <li>✓ Dedicated account manager</li>
+      </ul>
+      <a href="#contact" class="btn-outline">Talk to Us</a>
+    </div>
+  </div>
+  <p class="pricing-note">All plans include a 30-day satisfaction guarantee. Cancel anytime after month one.</p>
+</section>
+
+<section class="cta-section" id="contact">
+  <div class="cta-inner">
+    <h2>Ready to Outshine the Business Down the Street?</h2>
+    <p>Get a free reputation audit and see exactly where you're losing customers to weak reviews — no obligation, no pressure.</p>
+    <div class="contact-form">
+      <form onsubmit="event.preventDefault(); alert('Thanks! We\'ll be in touch within one business day.');">
+        <div class="form-row">
+          <input type="text" placeholder="First Name" required>
+          <input type="text" placeholder="Last Name" required>
+        </div>
+        <div class="form-row">
+          <input type="email" placeholder="Email Address" required>
+          <input type="tel" placeholder="Phone Number" required>
+        </div>
+        <textarea placeholder="Tell us about your business (name, location, current review situation)"></textarea>
+        <button type="submit">Get My Free Reputation Audit</button>
+      </form>
+      <p class="form-note">We respond within one business day. No spam, ever.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="logo">🚀 <span>Review Rocket</span></div>
+      <p>The reputation engine for dentists, med spas, home-service companies, restaurants, and auto shops who refuse to settle for average reviews.</p>
+    </div>
+    <div class="footer-links">
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#about">About</a>
+        <a href="#features">Services</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:hello@reviewrocket.com">hello@reviewrocket.com</a>
+        <a href="tel:+18005551234">(800) 555-1234</a>
+      </div>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    &copy; 2024 Review Rocket. All rights reserved.
+  </div>
+</footer>
+
+<script>(function(){var E='APP_BASE_URL/functions/siteChat',S='review-rocket';var b=document.createElement('div');b.style.cssText='position:fixed;bottom:20px;right:20px;width:56px;height:56px;border-radius:50%;background:#00ff41;color:#0a0a12;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 0 20px rgba(0,255,65,0.5);z-index:99999';b.innerHTML='\u{1F4AC}';document.body.appendChild(b);var p=document.createElement('div');p.style.cssText='position:fixed;bottom:90px;right:20px;width:320px;max-height:400px;background:#0a0a12;border:2px solid #00ff41;border-radius:12px;display:none;flex-direction:column;z-index:99999;overflow:hidden;font-family:sans-serif';p.innerHTML='<div style="padding:12px;background:#00ff41;color:#0a0a12;font-weight:bold;font-size:14px">Chat with us</div><div id="cm" style="flex:1;overflow-y:auto;padding:12px;max-height:280px"></div><div style="padding:8px;display:flex;gap:4px"><input id="ci" style="flex:1;padding:8px;border:1px solid #00ff41;border-radius:4px;background:#111;color:#fff" placeholder="Type a message..."/><button id="cs" style="padding:8px 12px;background:#00ff41;color:#0a0a12;border:none;border-radius:4px;cursor:pointer;font-weight:bold">Send</button></div>';document.body.appendChild(p);var m=p.querySelector('#cm');function a(t,w){var d=document.createElement('div');d.style.cssText='padding:6px 10px;margin:4px 0;border-radius:8px;max-width:85%;font-size:13px;color:#fff;'+(w==='bot'?'background:#1a3a1a':'background:#003a3a;margin-left:auto');d.textContent=t;m.appendChild(d);m.scrollTop=m.scrollHeight;}b.onclick=function(){p.style.display=p.style.display==='none'?'flex':'none';if(!m.children.length)a('Hi! Ask me anything about our business.','bot');};function s(){var i=p.querySelector('#ci'),t=i.value.trim();if(!t)return;a(t,'user');i.value='';a('...','bot');fetch(E,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slug:S,message:t})}).then(function(r){return r.json();}).then(function(d){var l=m.lastChild;if(l)l.remove();a(d.reply||'Sorry, I did not get that.','bot');}).catch(function(){var l=m.lastChild;if(l)l.remove();a('Connection error. Please try again later.','bot');});}p.querySelector('#cs').onclick=s;p.querySelector('#ci').onkeydown=function(e){if(e.key==='Enter')s();};})();</script><script>(function(){var L='APP_BASE_URL/Checkout?productId=6ab182daa26e7d78b46cadb7';var b=document.createElement('a');b.href=L;b.target='_blank';b.rel='noopener noreferrer';b.style.cssText='position:fixed;bottom:20px;left:20px;padding:10px 18px;border-radius:8px;background:#00ff41;color:#0a0a12;font-family:sans-serif;font-weight:bold;font-size:14px;text-decoration:none;box-shadow:0 0 20px rgba(0,255,65,0.5);z-index:99999';b.innerHTML='\u{1F4B0} Buy Now';document.body.appendChild(b);})();</script></body>
+</html>
